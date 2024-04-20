@@ -1,12 +1,10 @@
-import { Logger } from "sitka";
-import { NotifyService } from "./notify.service";
-import { FileService } from "./file.service";
-import { AxiosService } from "./axios.service";
 import { delay, getFullUrl } from "../helpers";
+import { AxiosService } from "./axios.service";
+import { FileService } from "./file.service";
+import { NotifyService } from "./notify.service";
 
 export class NumberChecking {
   private checkingNumbers: Array<string> = [];
-  private _logger: Logger;
   private notifyService: NotifyService;
   private allowRunning = true;
 
@@ -19,7 +17,6 @@ export class NumberChecking {
   }
 
   constructor(notifyService: NotifyService) {
-    this._logger = Logger.getLogger({ name: this.constructor.name });
     const inputNumbers = FileService.readFileSync("input.txt");
     this.notifyService = notifyService;
     this.setCheckingNumber(inputNumbers);
@@ -38,35 +35,39 @@ export class NumberChecking {
       try {
         const recheckNumbers: Array<string> = [];
 
-        this._logger.info("Start checking", this.checkingNumbers.length, this.checkingNumbers);
+        console.info(
+          "Start checking",
+          this.checkingNumbers.length,
+          this.checkingNumbers
+        );
 
         for (const number of this.checkingNumbers) {
-          this._logger.info("Checking...", number);
+          console.info("Checking...", number);
           let rs;
           try {
             rs = await AxiosService.get(getFullUrl(number));
           } catch (err) {
             rs = "";
-            this._logger.error("Checking error...", number, err);
+            console.error({ msg: "Checking error...", number, err });
           }
 
           if (rs.length) {
-            this._logger.info("ONLINE ", number);
+            console.info({ msg: "ONLINE", number });
 
-            this.notifyService.sendWindownNotify(number);
+            this.notifyService.notify(number);
             continue;
           }
 
           recheckNumbers.push(number);
         }
 
-        this._logger.info("End checking, re-check", recheckNumbers);
+        console.info("End checking, re-check", recheckNumbers);
         this.setCheckingNumber(recheckNumbers);
 
         this.allowRunning = false;
         await delay(+(process.env.JOB_INTERVAL || 31000));
       } catch (err) {
-        this._logger.error("execute() error", err);
+        console.error("execute() error", err);
       }
     }
   }

@@ -21,7 +21,7 @@
     "dist/"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "(rm -rf ./dist || true) && tsc",
     "changelog": "conventional-changelog -p angular -u",
     "changelog:update": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "clean": "(rm -r ./.nyc_output || true) && (rm -r ./coverage || true) && (rm -r ./dist || true)",
@@ -35,7 +35,7 @@
     "test": "mocha",
     "upgrade": "npx npm-check -u",
     "version": "npm run build && npm run changelog:update",
-    "dev": "nodemon src/index.ts",
+    "dev": "(rm -rf ./dist || true) && nodemon src/index.ts",
     "server": "nodemon src/server.ts",
     "start": "node dist/index.js"
   },
@@ -67,6 +67,7 @@
   },
   "dependencies": {
     "@slack/web-api": "^6.8.1",
+    "axios": "^1.6.8",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.19.2",

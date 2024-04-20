@@ -5,6 +5,6 @@ dotenv.config();
 
 const notifyService = new NotifyService();
 const numberChecking = new NumberChecking(notifyService);
-// numberChecking.toString();
 numberChecking.execute();
-// notifyService.sendWindownNotify("905234765");
+
+// notifyService.notify("905234765");
