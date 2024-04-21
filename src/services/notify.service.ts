@@ -8,13 +8,15 @@ interface INotify {
 
 class SlackNotify implements INotify {
   notify(phoneNumber: string): void {
-    axios.post(
-      "https://hooks.slack.com/services/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",
-      {
-        text: `<${getFullUrl(phoneNumber)}|${phoneNumber}>`,
-      },
-      { headers: { "Content-Type": "application/json" } }
-    );
+    axios
+      .post(
+        "https://hooks.slack.com/services/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",
+        {
+          text: `<${getFullUrl(phoneNumber)}|${phoneNumber}>`,
+        },
+        { headers: { "Content-Type": "application/json" } }
+      )
+      .catch((err) => console.error({ msg: "SlackNotify error", err }));
   }
 }
 

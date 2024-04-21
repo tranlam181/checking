@@ -64,7 +64,7 @@ export class NumberChecking {
         console.info("End checking, re-check", recheckNumbers);
         this.setCheckingNumber(recheckNumbers);
 
-        this.allowRunning = false;
+        this.allowRunning = true;
         await delay(+(process.env.JOB_INTERVAL || 31000));
       } catch (err) {
         console.error("execute() error", err);
